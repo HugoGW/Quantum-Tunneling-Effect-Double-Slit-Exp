@@ -90,13 +90,13 @@ def update(frame):
 
     # Update the wave function using the FDTD method
     for _ in range(60):  # Update multiple steps per frame
-        Psi_Real[1:-1] -= a2 * (Psi_Imag[2:] - 2 * Psi_Imag[1:-1] + Psi_Imag[:-2]) + a3 * U[1:-1] * Psi_Imag[1:-1]  # updating the real part
-        Psi_Imag[1:-1] += a2 * (Psi_Real[2:] - 2 * Psi_Real[1:-1] + Psi_Real[:-2]) - a3 * U[1:-1] * Psi_Real[1:-1]  # updating the imag part
+        Psi_Real[1:-1] = Psi_Real[1:-1] - a2 * (Psi_Imag[2:] - 2 * Psi_Imag[1:-1] + Psi_Imag[:-2]) + a3 * U[1:-1] * Psi_Imag[1:-1]  # updating the real part
+        Psi_Imag[1:-1] = Psi_Imag[1:-1] + a2 * (Psi_Real[2:] - 2 * Psi_Real[1:-1] + Psi_Real[:-2]) - a3 * U[1:-1] * Psi_Real[1:-1]  # updating the imag part
         Psi_Prob[1:-1] = Psi_Real[1:-1]**2 + Psi_Imag[1:-1]**2  # updating the probability
         current_time += dt  # updating the current time as current_time = current_time + dt
 
     # Update probability density curve
-    line_prob.set_data(x * 1.e9, Psi_Prob / np.sum(Psi_Prob))
+    line_prob.set_data(x * 1.e9, Psi_Prob/np.sum(Psi_Prob))
 
     # Calculate probabilities on the left and right sides of the barrier
     left_side_prob = np.sum(Psi_Prob[:barrier_start_index]) / np.sum(Psi_Prob)
